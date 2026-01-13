@@ -138,6 +138,7 @@ services:
 ```bash
    docker compose logs -f kafka-broker
 ```
+docker compose -f docker-compose-kraft.yml logs kafka-broker
 
 Attendez que Kafka soit complètement démarré. Un message devrait appararaitre dans les logs :
 ```
@@ -152,10 +153,15 @@ Attendez que Kafka soit complètement démarré. Un message devrait appararaitre
 ```
 
 2. **Créer un topic `etudiants`**
+kafka-topics.sh --create --topic etudiants --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 3. **Lister les topics et décrire le topic `etudiants`**
+kafka-topics.sh --list --bootstrap-server localhost:9092
+kafka-topics.sh --describe --topic etudiants --bootstrap-server localhost:9092
 
 4. **Créer un producteur Docker sur le topic `etudiants`**
+kafka-console-producer.sh --topic etudiants --bootstrap-server localhost:9092
+
 
 Envoyez quelques messages représentant des étudiants.
 (Attention : Une ligne correspond à un message)
@@ -169,6 +175,8 @@ Envoyez quelques messages représentant des étudiants.
 ```
 
 5. **Créer un consumateur Docker sur le topic `etudiants`**
+kafka-console-consumer.sh --topic etudiants --bootstrap-server localhost:9092 --from-beginning
+
 
 ### 2.3 Nettoyage
 ```bash
@@ -180,7 +188,16 @@ docker compose down -v
 ## Questions de synthèse
 
 1. Quelle est la différence entre une partition et un topic ?
+Un topic est un nom logique pour un flux de messages, tandis qu'une partition est une division physique d'un topic qui permet la scalabilité et la parallélisation du traitement.
+
 2. À quoi sert un consumer group ?
+Un consumer group regroupe des consommateurs qui partagent la lecture d'un ou plusieurs topics, assurant que chaque message est consommé une seule fois par groupe.
+
 3. Quels sont les avantages de Docker pour le développement avec Kafka ?
+Docker simplifie le déploiement, l'isolation et la reproductibilité des environnements Kafka, rendant les tests et le développement locaux plus simples.
+
 4. Que se passe-t-il si on a plus de consommateurs que de partitions dans un groupe ?
+Si le nombre de consommateurs dépasse celui des partitions, certains consommateurs seront inactifs et ne traiteront aucun message.
+
 5. Comment Kafka garantit-il l'ordre des messages ?
+Kafka garantit l'ordre des messages à l'intérieur d'une partition, mais pas entre plusieurs partitions d'un même topic.
