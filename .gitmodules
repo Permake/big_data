@@ -1,3 +1,6 @@
 [submodule "tp2"]
 	path = tp2
 	url = https://github.com/Permake/tp2
+[submodule "tp3"]
+	path = tp3
+	url = https://github.com/Permake/tp3
